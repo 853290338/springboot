@@ -2,12 +2,12 @@ package com.zhumeng.springbootWeb.config;
 
 import java.lang.reflect.Method;
 
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,15 +18,16 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Configuration
+@SpringBootConfiguration
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
 
     /**
      * 主键生成策略
+     * 重写 CachingConfigurerSupport keyGenerator
      */
     @Bean
-    public KeyGenerator generator() {
+    public KeyGenerator keyGenerator() {
 
         return new KeyGenerator() {
 
@@ -41,6 +42,7 @@ public class RedisConfig extends CachingConfigurerSupport {
                 }
                 return builder.toString();
             }
+
         };
     }
 
@@ -60,15 +62,14 @@ public class RedisConfig extends CachingConfigurerSupport {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Bean
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory connectionFactory) {
-
-        StringRedisTemplate redisTemplate = new StringRedisTemplate(connectionFactory);
-        Jackson2JsonRedisSerializer jsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        jsonRedisSerializer.setObjectMapper(mapper);
-        redisTemplate.setValueSerializer(jsonRedisSerializer);
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
+        StringRedisTemplate template = new StringRedisTemplate(connectionFactory);
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+        template.setValueSerializer(jackson2JsonRedisSerializer);// 如果key是String 需要配置一下StringSerializer,不然key会乱码 /XX/XX
+        template.afterPropertiesSet();
+        return template;
     }
 }
