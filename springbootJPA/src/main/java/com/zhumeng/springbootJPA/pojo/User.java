@@ -14,7 +14,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 /**
- * 用户
+ * 用户aaa
  */
 @Entity
 @Table(name = "s_user")
