@@ -1,5 +1,3 @@
-
-
 server:
   port: 8080
 
@@ -15,13 +13,3 @@ spring:
       host: 127.0.0.1
       port: 27001
       database: test
-
-mongodb:
-  primary:
-    host: 127.0.0.1
-    port: 27001
-    database: test
-  secondary:
-    host: 127.0.0.1
-    port: 27001
-    database: mytest
