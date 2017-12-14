@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+  application:
+    name: springbootMongoDB
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27001
+      database: test
