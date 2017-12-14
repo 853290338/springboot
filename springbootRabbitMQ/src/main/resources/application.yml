@@ -1,0 +1,19 @@
+server:
+  port: 8080
+  
+spring:
+  application:
+    name: springbootRabbitMQ
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: dengpeng
+    password: 123456
+
+
+    
+      
